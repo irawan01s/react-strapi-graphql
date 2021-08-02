@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client'
+import ReactMarkdown from 'react-markdown'
 // import useFetch from '../hooks/useFetch'
 
 const REVIEW = gql`
@@ -9,7 +10,11 @@ const REVIEW = gql`
       id,
       title,
       rating,
-      body
+      body,
+      categories {
+        id,
+        name
+      }
     }
   }
 `
@@ -30,12 +35,14 @@ export default function ReviewDetails() {
   return (
     <div>
       <div  className="review-card">
-          <div className="rating">{data.review.rating}</div>
-          <h2>{data.review.title}</h2>
+        <div className="rating">{data.review.rating}</div>
+        <h2>{data.review.title}</h2>
 
-          <small>console list</small>
-          <p>{data.review.body}</p>
-        </div>
+        {data.review.categories.map(c => (
+            <small key={c.id}>{c.name}</small>
+          ))}
+        <ReactMarkdown>{data.review.body}</ReactMarkdown>
+      </div>
     </div>
   )
 }
